@@ -1,0 +1,30 @@
+// Saty Pivot Ribbon
+// Copyright (C) 2022 Saty Mahajan
+//
+// A 3 EMA Ribbon system that simplifies measuring and using emas for trend and support/resistance.
+// Special thanks to Ripster for his education and EMA Clouds which inspired this indicator.
+
+//@version=4
+study("Saty Pivot Ribbon", "Saty Pivot Ribbon", overlay = true)
+
+// Settings
+fast_ema = input(title = "Fast EMA Length", type = input.integer, defval = 8)
+pivot_ema = input(title = "Pivot EMA Length", type = input.integer, defval = 21)
+slow_ema = input(title = "Slow EMA Length", type = input.integer, defval = 34)
+cloud_transparency = input (title = "Cloud Transparency (0-100)", type = input.integer, defval = 60)
+
+// Calculations
+fast_ema_value = ema(close, fast_ema)
+pivot_ema_value = ema(close, pivot_ema)
+slow_ema_value = ema(close, slow_ema)
+
+// Create plots
+fast_ema_plot = plot(fast_ema_value, color = na, title = "Fast EMA")
+pivot_ema_plot = plot(pivot_ema_value, color = na, title = "Pivot EMA")
+slow_ema_plot = plot(slow_ema_value, color = na, title = "Slow EMA")
+
+// Fill in the plots to create clouds
+fast_cloud_color = fast_ema_value >= pivot_ema_value ? color.new(color.green, cloud_transparency) : color.new(color.red, cloud_transparency)
+fill(fast_ema_plot, pivot_ema_plot, color = fast_cloud_color, title="Fast Cloud")
+slow_cloud_color = pivot_ema_value >= slow_ema_value ? color.new(color.aqua, cloud_transparency) : color.new(color.orange, cloud_transparency)
+fill(pivot_ema_plot, slow_ema_plot, color = slow_cloud_color, title="Slow Cloud")
