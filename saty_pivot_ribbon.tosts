@@ -1,0 +1,24 @@
+# Saty Pivot Ribbon
+# Copyright (C) 2022 Saty Mahajan
+#
+# A 3 EMA Ribbon system that simplifies measuring and using emas for trend and support/resistance.
+# Special thanks to Ripster for his education and EMA Clouds which inspired this indicator.
+
+# Settings
+input Fast_EMA = 8;
+input Pivot_EMA = 21;
+input Slow_EMA = 34;
+
+# Calculations
+def price = close;
+def FastValue = ExpAverage(price, Fast_EMA);
+def PivotValue = ExpAverage(price, Pivot_EMA);
+def SlowValue = ExpAverage(price, Slow_EMA);
+
+# Add Clouds
+DefineGlobalColor("Fast Long", Color.GREEN);
+DefineGlobalColor("Fast Short", Color.RED);
+AddCloud(FastValue, PivotValue, GlobalColor("Fast Long"), GlobalColor("Fast Short"));
+DefineGlobalColor("Slow Long", Color.CYAN);
+DefineGlobalColor("Slow Short", Color.LIGHT_ORANGE);
+AddCloud(PivotValue, SlowValue, GlobalColor("Slow Long"), GlobalColor("Slow Short"));
