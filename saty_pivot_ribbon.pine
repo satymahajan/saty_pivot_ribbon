@@ -11,6 +11,10 @@ study("Saty Pivot Ribbon", "Saty Pivot Ribbon", overlay = true)
 fast_ema = input(title = "Fast EMA Length", type = input.integer, defval = 8)
 pivot_ema = input(title = "Pivot EMA Length", type = input.integer, defval = 21)
 slow_ema = input(title = "Slow EMA Length", type = input.integer, defval = 34)
+bullish_fast_cloud_color = input(color.green, "Bullish Fast Cloud Color")
+bearish_fast_cloud_color = input(color.red, "Bearish Fast Cloud Color")
+bullish_slow_cloud_color = input(color.aqua, "Bullish Slow Cloud Color")
+bearish_slow_cloud_color = input(color.orange, "Bearish Slow Cloud Color")
 cloud_transparency = input (title = "Cloud Transparency (0-100)", type = input.integer, defval = 60)
 
 // Calculations
