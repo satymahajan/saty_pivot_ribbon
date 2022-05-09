@@ -28,7 +28,7 @@ pivot_ema_plot = plot(pivot_ema_value, color = na, title = "Pivot EMA")
 slow_ema_plot = plot(slow_ema_value, color = na, title = "Slow EMA")
 
 // Fill in the plots to create clouds
-fast_cloud_color = fast_ema_value >= pivot_ema_value ? color.new(color.green, cloud_transparency) : color.new(color.red, cloud_transparency)
+fast_cloud_color = fast_ema_value >= pivot_ema_value ? color.new(bullish_fast_cloud_color, cloud_transparency) : color.new(bearish_fast_cloud_color, cloud_transparency)
 fill(fast_ema_plot, pivot_ema_plot, color = fast_cloud_color, title="Fast Cloud")
-slow_cloud_color = pivot_ema_value >= slow_ema_value ? color.new(color.aqua, cloud_transparency) : color.new(color.orange, cloud_transparency)
+slow_cloud_color = pivot_ema_value >= slow_ema_value ? color.new(bullish_slow_cloud_color, cloud_transparency) : color.new(bearish_slow_cloud_color, cloud_transparency)
 fill(pivot_ema_plot, slow_ema_plot, color = slow_cloud_color, title="Slow Cloud")
