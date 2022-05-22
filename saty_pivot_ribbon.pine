@@ -16,6 +16,12 @@ bearish_fast_cloud_color = input(color.red, "Bearish Fast Cloud Color")
 bullish_slow_cloud_color = input(color.aqua, "Bullish Slow Cloud Color")
 bearish_slow_cloud_color = input(color.orange, "Bearish Slow Cloud Color")
 cloud_transparency = input (title = "Cloud Transparency (0-100)", type = input.integer, defval = 60)
+show_fast_ema_highlight = input(false, "Show Fast EMA Highlight")
+fast_ema_highlight_color = input(color.white, "Fast EMA Highlight Color")
+show_pivot_ema_highlight = input(false, "Show Pivot EMA Highlight")
+pivot_ema_highlight_color = input(color.white, "Pivot EMA Highlight Color")
+show_slow_ema_highlight = input(false, "Show Slow EMA Highlight")
+slow_ema_highlight_color = input(color.white, "Slow EMA Highlight Color")
 
 // Calculations
 fast_ema_value = ema(close, fast_ema)
@@ -23,9 +29,9 @@ pivot_ema_value = ema(close, pivot_ema)
 slow_ema_value = ema(close, slow_ema)
 
 // Create plots
-fast_ema_plot = plot(fast_ema_value, color = na, title = "Fast EMA")
-pivot_ema_plot = plot(pivot_ema_value, color = na, title = "Pivot EMA")
-slow_ema_plot = plot(slow_ema_value, color = na, title = "Slow EMA")
+fast_ema_plot = plot(fast_ema_value, color = show_fast_ema_highlight ? fast_ema_highlight_color : na, title = "Fast EMA")
+pivot_ema_plot = plot(pivot_ema_value, color = show_pivot_ema_highlight ? pivot_ema_highlight_color : na, title = "Pivot EMA")
+slow_ema_plot = plot(slow_ema_value, color = show_slow_ema_highlight ? slow_ema_highlight_color : na, title = "Slow EMA")
 
 // Fill in the plots to create clouds
 fast_cloud_color = fast_ema_value >= pivot_ema_value ? color.new(bullish_fast_cloud_color, cloud_transparency) : color.new(bearish_fast_cloud_color, cloud_transparency)
