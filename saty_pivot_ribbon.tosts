@@ -8,6 +8,9 @@
 input Fast_EMA = 8;
 input Pivot_EMA = 21;
 input Slow_EMA = 34;
+input Highlight_Fast = no;
+input Highlight_Pivot = no;
+input Highlight_Slow = no;
 
 # Calculations
 def price = close;
@@ -22,3 +25,22 @@ AddCloud(FastValue, PivotValue, GlobalColor("Fast Long"), GlobalColor("Fast Shor
 DefineGlobalColor("Slow Long", Color.CYAN);
 DefineGlobalColor("Slow Short", Color.LIGHT_ORANGE);
 AddCloud(PivotValue, SlowValue, GlobalColor("Slow Long"), GlobalColor("Slow Short"));
+
+# Trend Analysis
+def bullish = price >= FastValue and price >= PivotValue and price >= SlowValue;
+def bearish = price <= FastValue and price <= PivotValue and price <= SlowValue;
+
+# Add Pivot Plot
+DefineGlobalColor("Pivot Highlight", Color.LIGHT_GRAY);
+plot Pivot = if Highlight_Pivot then PivotValue else Double.nan;
+Pivot.AssignValueColor(GlobalColor("Pivot Highlight"));
+
+# Add Fast Plot
+DefineGlobalColor("Fast Highlight", Color.LIGHT_GRAY);
+plot Fast = if Highlight_Fast then FastValue else Double.nan;
+Pivot.AssignValueColor(GlobalColor("Fast Highlight"));
+
+# Add Slow Plot
+DefineGlobalColor("Slow Highlight", Color.LIGHT_GRAY);
+plot Slow = if Highlight_Slow then SlowValue else Double.nan;
+Pivot.AssignValueColor(GlobalColor("Slow Highlight"));
