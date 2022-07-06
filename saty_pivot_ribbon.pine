@@ -2,7 +2,7 @@
 // Copyright (C) 2022 Saty Mahajan
 //
 // A 3 EMA Ribbon system that simplifies measuring and using emas for trend and support/resistance.
-// Special thanks to Ripster for his education and EMA Clouds which inspired this indicator.
+// Special thanks to Ripster for his education and EMA Clouds which inspired this indicator. 
 
 //@version=4
 study("Saty Pivot Ribbon", "Saty Pivot Ribbon", overlay = true)
@@ -22,11 +22,18 @@ show_pivot_ema_highlight = input(false, "Show Pivot EMA Highlight")
 pivot_ema_highlight_color = input(color.white, "Pivot EMA Highlight Color")
 show_slow_ema_highlight = input(false, "Show Slow EMA Highlight")
 slow_ema_highlight_color = input(color.white, "Slow EMA Highlight Color")
+show_conviction_arrows = input(true, "Show Conviction Arrows")
+fast_conviction_ema = input(13, "Fast Conviction EMA")
+slow_conviction_ema = input(48, "Slow Conviction EMA")
+bullish_conviction_color = input(color.aqua, "Bullish Conviction Arrow Color")
+bearish_conviction_color = input(color.yellow, "Bearish Conviction Arrow Color")
 
 // Calculations
 fast_ema_value = ema(close, fast_ema)
 pivot_ema_value = ema(close, pivot_ema)
 slow_ema_value = ema(close, slow_ema)
+fast_conviction_ema_value = ema(close, fast_conviction_ema)
+slow_conviction_ema_value = ema(close, slow_conviction_ema)
 
 // Create plots
 fast_ema_plot = plot(fast_ema_value, color = show_fast_ema_highlight ? fast_ema_highlight_color : na, title = "Fast EMA")
@@ -38,3 +45,12 @@ fast_cloud_color = fast_ema_value >= pivot_ema_value ? color.new(bullish_fast_cl
 fill(fast_ema_plot, pivot_ema_plot, color = fast_cloud_color, title="Fast Cloud")
 slow_cloud_color = pivot_ema_value >= slow_ema_value ? color.new(bullish_slow_cloud_color, cloud_transparency) : color.new(bearish_slow_cloud_color, cloud_transparency)
 fill(pivot_ema_plot, slow_ema_plot, color = slow_cloud_color, title="Slow Cloud")
+
+// Conviction Arrows (default based on 13/48)
+// Read more about that combo here: http://etfhq.com/blog/2013/01/15/golden-cross-which-is-the-best/#Top
+bullish_conviction = fast_conviction_ema_value >= slow_conviction_ema_value
+bearish_conviction = fast_conviction_ema_value < slow_conviction_ema_value
+bullish_conviction_confirmed = (bullish_conviction[0] == true and bullish_conviction[1] == false)
+bearish_conviction_confirmed = (bearish_conviction[0] == true and bearish_conviction[1] == false)
+plotshape(bullish_conviction_confirmed and show_conviction_arrows, style = shape.triangleup, color = bullish_conviction_color, location = location.belowbar, size = size.small)
+plotshape(bearish_conviction_confirmed and show_conviction_arrows, style = shape.triangledown, color = bearish_conviction_color, location = location.abovebar, size = size.small)
