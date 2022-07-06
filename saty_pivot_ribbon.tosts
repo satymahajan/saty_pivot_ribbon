@@ -11,12 +11,17 @@ input Slow_EMA = 34;
 input Highlight_Fast = no;
 input Highlight_Pivot = no;
 input Highlight_Slow = no;
+input Show_Conviction_Arrows = yes;
+input Fast_Conviction_EMA = 13;
+input Slow_Conviction_EMA = 48;
 
 # Calculations
 def price = close;
 def FastValue = ExpAverage(price, Fast_EMA);
 def PivotValue = ExpAverage(price, Pivot_EMA);
 def SlowValue = ExpAverage(price, Slow_EMA);
+def Fast_Conviction_Value = ExpAverage(price, Fast_Conviction_EMA);
+def Slow_Conviction_Value = ExpAverage(price, Slow_Conviction_EMA);
 
 # Add Clouds
 DefineGlobalColor("Fast Long", Color.GREEN);
@@ -25,10 +30,6 @@ AddCloud(FastValue, PivotValue, GlobalColor("Fast Long"), GlobalColor("Fast Shor
 DefineGlobalColor("Slow Long", Color.CYAN);
 DefineGlobalColor("Slow Short", Color.LIGHT_ORANGE);
 AddCloud(PivotValue, SlowValue, GlobalColor("Slow Long"), GlobalColor("Slow Short"));
-
-# Trend Analysis
-def bullish = price >= FastValue and price >= PivotValue and price >= SlowValue;
-def bearish = price <= FastValue and price <= PivotValue and price <= SlowValue;
 
 # Add Pivot Plot
 DefineGlobalColor("Pivot Highlight", Color.LIGHT_GRAY);
@@ -44,3 +45,22 @@ Pivot.AssignValueColor(GlobalColor("Fast Highlight"));
 DefineGlobalColor("Slow Highlight", Color.LIGHT_GRAY);
 plot Slow = if Highlight_Slow then SlowValue else Double.nan;
 Pivot.AssignValueColor(GlobalColor("Slow Highlight"));
+
+# Conviction Arrows (default based on 13/48)
+# Read more about that combo here: http://etfhq.com/blog/2013/01/15/golden-cross-which-is-the-best/#Top
+DefineGlobalColor("Bullish Conviction Arrow", Color.CYAN);
+DefineGlobalColor("Bearish Conviction Arrow", Color.ORANGE);
+def bullish_conviction = Fast_Conviction_Value >= Slow_Conviction_Value;
+def bearish_conviction = Fast_Conviction_Value < Slow_Conviction_Value;
+def bullish_conviction_confirmed = (bullish_conviction == YES and bullish_conviction[1] == NO);
+def bearish_conviction_confirmed = (bearish_conviction == YES and bearish_conviction[1] == NO);
+plot bullish_conviction_signal = if bullish_conviction_confirmed and Show_Conviction_Arrows then close else Double.NaN;
+plot bearish_conviction_signal = if bearish_conviction_confirmed and Show_Conviction_Arrows then close else Double.NaN;
+bullish_conviction_signal.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_UP);
+bullish_conviction_signal.AssignValueColor(GlobalColor("Bullish Conviction Arrow"));
+bullish_conviction_signal.SetLineWeight(4);
+bullish_conviction_signal.HideBubble();
+bearish_conviction_signal.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOWN);
+bearish_conviction_signal.AssignValueColor(GlobalColor("Bearish Conviction Arrow"));
+bearish_conviction_signal.SetLineWeight(4);
+bearish_conviction_signal.HideBubble();
