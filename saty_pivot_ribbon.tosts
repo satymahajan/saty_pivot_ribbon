@@ -14,6 +14,8 @@ input Highlight_Slow = no;
 input Show_Conviction_Arrows = yes;
 input Fast_Conviction_EMA = 13;
 input Slow_Conviction_EMA = 48;
+input Show_Fast_Conviction_EMA = no;
+input Show_Slow_Conviction_EMA = no;
 
 # Calculations
 def price = close;
@@ -64,3 +66,7 @@ bearish_conviction_signal.SetPaintingStrategy(PaintingStrategy.BOOLEAN_ARROW_DOW
 bearish_conviction_signal.AssignValueColor(GlobalColor("Bearish Conviction Arrow"));
 bearish_conviction_signal.SetLineWeight(4);
 bearish_conviction_signal.HideBubble();
+plot fast_conviction_ema_signal = if Show_Fast_Conviction_EMA then Fast_Conviction_Value else Double.NaN;
+fast_conviction_ema_signal.setDefaultColor(Color.LIGHT_GRAY);
+plot slow_conviction_ema_signal = if Show_Slow_Conviction_EMA then Slow_Conviction_Value else Double.NaN;
+slow_conviction_ema_signal.setDefaultColor(Color.PLUM);
